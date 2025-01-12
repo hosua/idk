@@ -1,28 +1,29 @@
 import { useState, useEffect } from "react";
 import { Button, Container, Row, Col, Table } from "react-bootstrap";
 
-export const RandomDogPage = () => {
+export const RandomDuckPage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  const [dogList, setDogList] = useState([]);
+  const [duckList, setDuckList] = useState([]);
 
-  const fetchDog = async () => {
-    const res = await fetch("https://dog.ceo/api/breeds/image/random");
-    const { message } = await res.json();
-    setDogList([{ url: message }, ...dogList]);
+  const fetchDuck = async () => {
+    const res = await fetch("/duck/api/v2/random");
+    const { url } = await res.json();
+    console.log(url);
+    setDuckList([{ url }, ...duckList]);
     return message;
   };
 
   return (
     <>
       <Container className="my-3">
-        <h3> Dogs </h3>
+        <h3> Ducks </h3>
         <div className="mb-3">
-          <Button className="me-2" onClick={fetchDog}>
-            Get Dog
+          <Button className="me-2" onClick={fetchDuck}>
+            Get Duck
           </Button>
-          <Button onClick={() => setDogList([])}>Clear Dogs</Button>
+          <Button onClick={() => setDuckList([])}>Clear Ducks</Button>
         </div>
-        {dogList.map(({ url }, index) => (
+        {duckList.map(({ url }, index) => (
           <img
             className="me-2 mb-2"
             key={index}
@@ -40,4 +41,4 @@ export const RandomDogPage = () => {
   );
 };
 
-export default RandomDogPage;
+export default RandomDuckPage;

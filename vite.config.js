@@ -10,4 +10,13 @@ export default defineConfig({
       "@pages": "/src/pages",
     },
   },
+  server: {
+    proxy: {
+      "/duck/": {
+        target: "https://random-d.uk",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/duck/, ""),
+      },
+    },
+  },
 });
