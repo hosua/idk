@@ -6,11 +6,10 @@ export const RandomDuckPage = () => {
   const [duckList, setDuckList] = useState([]);
 
   const fetchDuck = async () => {
-    const res = await fetch("/duck/api/v2/random");
+    const res = await fetch("/duck/api/v2/random"); // this will work locally only
     const { url } = await res.json();
-    console.log(url);
     setDuckList([{ url }, ...duckList]);
-    return message;
+    return url;
   };
 
   return (

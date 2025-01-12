@@ -29,7 +29,7 @@ export const RandomDogPage = () => {
             src={url}
             style={{
               maxWidth: "500px",
-              maxHeight: "500",
+              maxHeight: "500px",
               objectFit: "contain",
             }}
             alt="dog"
