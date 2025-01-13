@@ -4,22 +4,50 @@ import { Chess } from "chess.js";
 
 const FEN_START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+const pgnToFenList = (pgn) => {
+  const fenList = [];
+  let chess = new Chess();
+  pgn = pgn.replace(/\{.*?\}/g, "");
+  chess.loadPgn(pgn);
+  const moveList = chess.history();
+  chess = new Chess();
+  moveList.forEach((move) => {
+    chess.move(move);
+    fenList.push(chess.fen());
+  });
+  return fenList;
+};
+// some rendering magic
+const renderChessBoard = (fen) => {};
+// return 8x8 matrix of the board
+const fenToBoard = (fen) => {
+  if (!fen) return;
+  const board = Array(8)
+    .fill()
+    .map(() => Array(8).fill("-"));
+
+  const rows = fen.split(" ")[0].split("/");
+  for (let i = 0; i < 8; ++i) {
+    let j = 0;
+    for (let ch of rows[i]) !isNaN(ch) ? (j += +ch) : (board[i][j++] = ch);
+  }
+  console.log(board);
+};
+
 export const ChessPage = () => {
   const [games, setGames] = useState([]);
   const [fenList, setFenList] = useState([]);
-  const [chess, setChess] = useState(new Chess());
   const fetchGames = async ({ username, mm, yyyy }) => {
     const res = await fetch(
       `https://api.chess.com/pub/player/${username}/games/${yyyy}/${mm}`,
     );
     const { games } = await res.json();
-    setChess(new Chess());
-    console.log(chess);
-    chess.load_pgn(games[0].pgn);
+    setFenList(pgnToFenList(games[0].pgn));
+    for (const fen of fenList) {
+      fenToBoard(fen);
+    }
     return games;
   };
-
-  const getPgnList = () => {};
 
   return (
     <>
@@ -33,11 +61,13 @@ export const ChessPage = () => {
               mm: "01",
             });
             setGames(games);
-            console.log(games[0].pgn);
+            const res = pgnToFenList(games[0].pgn);
           }}
         >
           Fetch
         </Button>
+        <br />
+        {fenList.length > 0 && <>chess component goes here</>}
       </Container>
     </>
   );
