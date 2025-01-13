@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Container } from "react-bootstrap";
 import { Chess } from "chess.js";
+import { Chessboard } from "react-chessboard";
 
 const FEN_START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -15,28 +16,17 @@ const pgnToFenList = (pgn) => {
     chess.move(move);
     fenList.push(chess.fen());
   });
-  return fenList;
+  return [FEN_START, ...fenList];
 };
-// some rendering magic
-const renderChessBoard = (fen) => {};
-// return 8x8 matrix of the board
-const fenToBoard = (fen) => {
-  if (!fen) return;
-  const board = Array(8)
-    .fill()
-    .map(() => Array(8).fill("-"));
-
-  const rows = fen.split(" ")[0].split("/");
-  for (let i = 0; i < 8; ++i) {
-    let j = 0;
-    for (let ch of rows[i]) !isNaN(ch) ? (j += +ch) : (board[i][j++] = ch);
-  }
-  console.log(board);
-};
+const renderChessBoard = (fen) => (
+  <Chessboard position={fen} arePiecesDraggable={false} />
+);
 
 export const ChessPage = () => {
   const [games, setGames] = useState([]);
   const [fenList, setFenList] = useState([]);
+  const [fen, setFen] = useState(FEN_START);
+  const [fenIdx, setFenIdx] = useState(0);
   const fetchGames = async ({ username, mm, yyyy }) => {
     const res = await fetch(
       `https://api.chess.com/pub/player/${username}/games/${yyyy}/${mm}`,
@@ -46,14 +36,20 @@ export const ChessPage = () => {
     for (const fen of fenList) {
       fenToBoard(fen);
     }
+    renderChessBoard(fenList[0]);
     return games;
   };
+
+  useEffect(() => {
+    if (fenIdx < fenList.length) setFen(fenList[fenIdx]);
+  }, [fenIdx]);
 
   return (
     <>
       <Container>
         <h3> Chess </h3>
         <Button
+          className="mb-2"
           onClick={async () => {
             const games = await fetchGames({
               username: "magnuscarlsen",
@@ -67,7 +63,25 @@ export const ChessPage = () => {
           Fetch
         </Button>
         <br />
-        {fenList.length > 0 && <>chess component goes here</>}
+        <Button
+          className="me-2 mb-2"
+          onClick={() => fenIdx >= 0 && setFenIdx(fenIdx - 1)}
+        >
+          Prev Move
+        </Button>
+        <Button
+          className="me-2 mb-2"
+          onClick={() => fenIdx < fenList.length - 1 && setFenIdx(fenIdx + 1)}
+        >
+          Next Move
+        </Button>
+        {fenList.length > 0 && (
+          <Chessboard
+            position={fen}
+            arePiecesDraggable={false}
+            boardWidth={400}
+          />
+        )}
       </Container>
     </>
   );
