@@ -7,15 +7,17 @@ export const RandomDogPage = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchDog = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("https://dog.ceo/api/breeds/image/random");
-      const { message } = await res.json();
-      setDogList([{ url: message }, ...dogList]);
-    } catch (err) {
-      console.error("Error fetching dog", err);
-    } finally {
-      setLoading(false);
+    if (!loading) {
+      setLoading(true);
+      try {
+        const res = await fetch("https://dog.ceo/api/breeds/image/random");
+        const { message } = await res.json();
+        setDogList([{ url: message }, ...dogList]);
+      } catch (err) {
+        console.error("Error fetching dog", err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

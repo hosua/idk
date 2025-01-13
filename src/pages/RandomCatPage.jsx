@@ -7,16 +7,18 @@ export const RandomCatPage = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchCat = async ({ gif }) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`https://cataas.com/cat${gif ? "/gif" : ""}`);
-      const blob = await res.blob();
-      const imgURL = URL.createObjectURL(blob);
-      setCatList([{ url: imgURL }, ...catList]);
-    } catch (err) {
-      console.error("Failed to fetch cat", error);
-    } finally {
-      setLoading(false);
+    if (!loading) {
+      setLoading(true);
+      try {
+        const res = await fetch(`https://cataas.com/cat${gif ? "/gif" : ""}`);
+        const blob = await res.blob();
+        const imgURL = URL.createObjectURL(blob);
+        setCatList([{ url: imgURL }, ...catList]);
+      } catch (err) {
+        console.error("Failed to fetch cat", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
