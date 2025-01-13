@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Table, Spinner } from "react-bootstrap";
+import { Button, Container, Row, Col, Table } from "react-bootstrap";
+import CenterSpinner from "@components/CenterSpinner";
 
 export const RandomCatPage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -12,8 +13,8 @@ export const RandomCatPage = () => {
       try {
         const res = await fetch(`https://cataas.com/cat${gif ? "/gif" : ""}`);
         const blob = await res.blob();
-        const imgURL = URL.createObjectURL(blob);
-        setCatList([{ url: imgURL }, ...catList]);
+        const url = URL.createObjectURL(blob);
+        setCatList([{ url }, ...catList]);
       } catch (err) {
         console.error("Failed to fetch cat", error);
       } finally {
@@ -35,7 +36,12 @@ export const RandomCatPage = () => {
           </Button>
           <Button onClick={() => setCatList([])}>Clear Cats</Button>
         </div>
-        {loading && <Spinner />}
+        {loading && (
+          <>
+            <CenterSpinner />
+            <br />
+          </>
+        )}
         {catList.map(({ url }, index) => (
           <>
             <img

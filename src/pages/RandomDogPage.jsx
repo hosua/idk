@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Table, Spinner } from "react-bootstrap";
+import { Button, Container, Row, Col, Table } from "react-bootstrap";
+import CenterSpinner from "@components/CenterSpinner";
 
 export const RandomDogPage = () => {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,7 +32,12 @@ export const RandomDogPage = () => {
           </Button>
           <Button onClick={() => setDogList([])}>Clear Dogs</Button>
         </div>
-        {loading && <Spinner />}
+        {loading && (
+          <>
+            <CenterSpinner />
+            <br />
+          </>
+        )}
         {dogList.map(({ url }, index) => (
           <img
             className="me-2 mb-2"
