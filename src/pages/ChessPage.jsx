@@ -162,6 +162,22 @@ export const ChessPage = () => {
     [],
   );
 
+  const handleFetchGames = async () => {
+    if (selectedUser === "") {
+      setFenList([]);
+      setGames([]);
+    } else {
+      const games = await fetchGames({
+        username: selectedUser.toLowerCase(),
+        yyyy: date.year.value,
+        mm: date.month.value.toString().padStart(2, "0"),
+      });
+      setGames([...games]);
+      setFenList(games.length > 0 ? pgnToFenList(games[0].pgn) : []);
+      console.log(games);
+    }
+  };
+
   useEffect(() => {
     if (fenIdx < fenList.length) setFen(fenList[fenIdx]);
   }, [fenIdx]);
@@ -178,6 +194,9 @@ export const ChessPage = () => {
           <Col>
             <label>Username</label>
             <Form.Control
+              onKeyDown={async (e) => {
+                if (e.key === "Enter") handleFetchGames();
+              }}
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
             />
@@ -211,19 +230,7 @@ export const ChessPage = () => {
           <Col sm={6} />
         </Row>
         <br />
-        <Button
-          className="mb-2 me-2"
-          onClick={async () => {
-            const games = await fetchGames({
-              username: selectedUser.toLowerCase(),
-              yyyy: date.year.value,
-              mm: date.month.value.toString().padStart(2, "0"),
-            });
-            console.log(games);
-            setGames([...games]);
-            setFenList(games.length > 0 ? pgnToFenList(games[0].pgn) : []);
-          }}
-        >
+        <Button className="mb-2 me-2" onClick={handleFetchGames}>
           Fetch
         </Button>
         <Button
