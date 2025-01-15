@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
+import Select from "react-select";
 
+const CURRENT_YEAR = new Date().getFullYear();
+const YEAR_START = 2007;
 const FEN_START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 const pgnToFenList = (pgn) => {
@@ -23,22 +26,48 @@ const pgnToFenList = (pgn) => {
 };
 
 export const ChessPage = () => {
+  const [date, setDate] = useState({
+    year: { label: CURRENT_YEAR, value: CURRENT_YEAR },
+    month: { label: "January", value: 1 },
+  });
   const [games, setGames] = useState([]);
   const [gamesIdx, setGamesIdx] = useState(0);
+  const [selectedUser, setSelectedUser] = useState("");
 
   const [fenList, setFenList] = useState([]);
   const [fenIdx, setFenIdx] = useState(0);
   const [fen, setFen] = useState(FEN_START);
 
-  const [selectedUser, setSelectedUser] = useState("MagnusCarlsen");
-
-  const fetchGames = async ({ username, mm, yyyy }) => {
-    const res = await fetch(
-      `https://api.chess.com/pub/player/${username}/games/${yyyy}/${mm}`,
-    );
+  const fetchGames = async () => {
+    const url = `https://api.chess.com/pub/player/${selectedUser}/games/${date.year.value}/${date.month.value.toString().padStart(2, 0)}`;
+    console.log(url);
+    const res = await fetch(url);
     const { games } = await res.json();
     return games;
   };
+
+  const monthOptions = [
+    { label: "January", value: 1 },
+    { label: "February", value: 2 },
+    { label: "March", value: 3 },
+    { label: "April", value: 4 },
+    { label: "May", value: 5 },
+    { label: "June", value: 6 },
+    { label: "July", value: 7 },
+    { label: "August", value: 8 },
+    { label: "September", value: 9 },
+    { label: "October", value: 10 },
+    { label: "November", value: 11 },
+    { label: "December", value: 12 },
+  ];
+
+  const yearOptions = Array.from(
+    { length: CURRENT_YEAR - YEAR_START + 1 },
+    (_, idx) => {
+      const year = YEAR_START + idx;
+      return { label: year, value: year };
+    },
+  );
 
   const renderChessBoard = () => (
     <>
@@ -113,16 +142,54 @@ export const ChessPage = () => {
     <>
       <Container>
         <h3> Chess </h3>
+        <Row>
+          <Col>
+            <label>Username</label>
+            <Form.Control
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <label>Month</label>
+            <Select
+              options={monthOptions}
+              value={date.month}
+              onChange={(option) => {
+                setDate({
+                  ...date,
+                  month: option,
+                });
+              }}
+            />
+          </Col>
+          <Col sm={2}>
+            <label>Year</label>
+            <Select
+              options={yearOptions}
+              value={date.year}
+              onChange={(option) => {
+                setDate({
+                  ...date,
+                  year: option,
+                });
+              }}
+            />
+          </Col>
+          <Col sm={6} />
+        </Row>
+        <br />
         <Button
           className="mb-2 me-2"
           onClick={async () => {
             const games = await fetchGames({
-              username: "magnuscarlsen",
-              yyyy: "2025",
-              mm: "01",
+              username: selectedUser.toLowerCase(),
+              yyyy: date.year.value,
+              mm: date.month.value.toString().padStart(2, "0"),
             });
+            console.log(games);
             setGames([...games]);
-            setFenList(pgnToFenList(games[0].pgn));
+            setFenList(games.length > 0 ? pgnToFenList(games[0].pgn) : []);
           }}
         >
           Fetch
@@ -142,9 +209,12 @@ export const ChessPage = () => {
             data={games}
             columns={columns}
             handleRowClick={(row) => {
-              setFenList(pgnToFenList(row.original.pgn));
               setFenIdx(0);
+              setFenList(pgnToFenList(row.original.pgn));
             }}
+            striped
+            bordered
+            hover
           />
         )}
         <br />

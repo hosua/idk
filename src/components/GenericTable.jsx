@@ -8,7 +8,17 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-export const GenericTable = ({ data, columns, handleRowClick, rowStyle }) => {
+export const GenericTable = ({
+  data,
+  columns,
+  handleRowClick,
+  rowStyle,
+
+  initialState,
+  bordered,
+  hover,
+  striped,
+}) => {
   const [sorting, setSorting] = useState([]);
 
   const table = useReactTable({
@@ -25,7 +35,12 @@ export const GenericTable = ({ data, columns, handleRowClick, rowStyle }) => {
   const { getRowModel, getHeaderGroups } = table;
 
   return (
-    <Table striped bordered hover>
+    <Table
+      striped={striped}
+      bordered={bordered}
+      hover={hover}
+      initialState={initialState}
+    >
       <thead>
         {getHeaderGroups().map((group) => (
           <tr key={group.id}>
