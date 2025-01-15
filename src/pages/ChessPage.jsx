@@ -135,15 +135,23 @@ export const ChessPage = () => {
     </>
   );
 
-  const getRowPlayer = ({ black, white }) =>
-    white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
-      ? { ...white, color: "white" }
-      : { ...black, color: "black" };
+  const getRowPlayer = useMemo(
+    () =>
+      ({ black, white }) =>
+        white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
+          ? { ...white, color: "white" }
+          : { ...black, color: "black" },
+    [selectedUser],
+  );
 
-  const getRowOpponent = ({ black, white }) =>
-    black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
-      ? { ...white, color: "white" }
-      : { ...black, color: "black" };
+  const getRowOpponent = useMemo(
+    () =>
+      ({ black, white }) =>
+        black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
+          ? { ...white, color: "white" }
+          : { ...black, color: "black" },
+    [selectedUser],
+  );
 
   const helper = createColumnHelper();
   const columns = useMemo(
@@ -203,7 +211,6 @@ export const ChessPage = () => {
       });
       setGames([...games]);
       setFenList(games.length > 0 ? pgnToFenList(games[0].pgn) : []);
-      console.log(games);
     }
   };
 
@@ -212,8 +219,12 @@ export const ChessPage = () => {
   }, [fenIdx]);
 
   useEffect(() => {
-    console.log(`games = ${JSON.stringify(games, null, 2)}`);
+    // console.log(`games = ${JSON.stringify(games, null, 2)}`);
   }, [games]);
+
+  useEffect(() => {
+    console.log(`User: ${selectedUser}`);
+  }, [selectedUser]);
 
   return (
     <>
@@ -223,8 +234,11 @@ export const ChessPage = () => {
           <Col sm={2}>
             <label>Username</label>
             <Form.Control
-              onKeyDown={async (e) => {
-                if (e.key === "Enter") handleFetchGames();
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleFetchGames();
+                }
               }}
               value={selectedUser}
               onChange={(e) => setSelectedUser(e.target.value)}
