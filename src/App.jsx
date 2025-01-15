@@ -6,6 +6,8 @@ import "bootswatch/dist/yeti/bootstrap.min.css";
 import RandomFactPage from "@pages/RandomFactPage";
 import CheapSharkPage from "@pages/CheapSharkPage";
 import RandomDogPage from "@pages/RandomDogPage";
+import RandomCatPage from "@pages/RandomCatPage";
+import ChessPage from "@pages/ChessPage";
 
 function App() {
   return (
@@ -13,6 +15,9 @@ function App() {
       <RandomFactPage />
       <CheapSharkPage />
       <RandomDogPage />
+      <RandomCatPage />
+      <ChessPage />
+      <br />
     </>
   );
 }
