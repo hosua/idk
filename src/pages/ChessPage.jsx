@@ -23,8 +23,30 @@ const pgnToFenList = (pgn) => {
     chess.move(move);
     fenList.push(chess.fen());
   });
-  const x = 4;
   return [FEN_START, ...fenList];
+};
+
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    color: "white",
+    backgroundColor: "#212121",
+    border: "1px solid #495056",
+    borderRadius: "none",
+  }),
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: "#212121",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isFocused ? "#e9ecef" : "#f8f9fa",
+    color: state.isFocused ? "#495057" : "#212529",
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "white",
+  }),
 };
 
 export const ChessPage = () => {
@@ -113,10 +135,10 @@ export const ChessPage = () => {
     </>
   );
 
-  const getRowPlayerColor = ({ white }) =>
+  const getRowPlayer = ({ black, white }) =>
     white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
-      ? "white"
-      : "black";
+      ? { ...white, color: "white" }
+      : { ...black, color: "black" };
 
   const getRowOpponent = ({ black, white }) =>
     black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
@@ -126,8 +148,11 @@ export const ChessPage = () => {
   const helper = createColumnHelper();
   const columns = useMemo(
     () => [
-      helper.accessor((row) => getRowPlayerColor(row), {
-        header: "Played as",
+      helper.accessor((row) => getRowPlayer(row).rating, {
+        header: "Player Rating",
+      }),
+      helper.accessor((row) => getRowPlayer(row).color, {
+        header: "Color",
       }),
       helper.accessor(
         (row) =>
@@ -137,7 +162,7 @@ export const ChessPage = () => {
         },
       ),
       helper.accessor((row) => getRowOpponent(row).rating, {
-        header: "Rating",
+        header: "Opponent Rating",
       }),
       helper.accessor(
         ({ accuracies }) => `W: ${accuracies.white} | B: ${accuracies.black}`,
@@ -189,9 +214,9 @@ export const ChessPage = () => {
   return (
     <>
       <Container>
-        <h3> Chess </h3>
+        <h3> Chess.com Lookup </h3>
         <Row>
-          <Col>
+          <Col sm={2}>
             <label>Username</label>
             <Form.Control
               onKeyDown={async (e) => {
@@ -201,7 +226,7 @@ export const ChessPage = () => {
               onChange={(e) => setSelectedUser(e.target.value)}
             />
           </Col>
-          <Col>
+          <Col sm={3}>
             <label>Month</label>
             <Select
               options={monthOptions}
@@ -212,6 +237,7 @@ export const ChessPage = () => {
                   month: option,
                 });
               }}
+              styles={customStyles}
             />
           </Col>
           <Col sm={2}>
@@ -225,6 +251,7 @@ export const ChessPage = () => {
                   year: option,
                 });
               }}
+              styles={customStyles}
             />
           </Col>
           <Col sm={6} />
