@@ -90,7 +90,7 @@ export const ChessPage = () => {
       const year = YEAR_START + idx;
       return { label: year, value: year };
     },
-  );
+  ).reverse();
 
   const renderChessBoard = () => (
     <>
