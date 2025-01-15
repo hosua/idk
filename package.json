@@ -13,11 +13,16 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mliebelt/pgn-parser": "^1.4.15",
+    "@mui/icons-material": "^6.4.0",
+    "@mui/material": "^6.4.0",
     "@tanstack/react-table": "^8.20.6",
     "bootstrap": "^5.3.3",
     "bootswatch": "^5.3.3",
     "chess.js": "^1.0.0",
+    "material-icons": "^1.13.12",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.7",

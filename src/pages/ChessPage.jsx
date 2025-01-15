@@ -6,6 +6,7 @@ import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import Select from "react-select";
 import moment from "moment";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_START = 2007;
@@ -41,7 +42,6 @@ export const ChessPage = () => {
 
   const fetchGames = async () => {
     const url = `https://api.chess.com/pub/player/${selectedUser}/games/${date.year.value}/${date.month.value.toString().padStart(2, 0)}`;
-    console.log(url);
     const res = await fetch(url);
     const { games } = await res.json();
     return games;
@@ -72,20 +72,44 @@ export const ChessPage = () => {
 
   const renderChessBoard = () => (
     <>
-      <Button
-        className="me-2 mb-2"
-        onClick={() => fenIdx > 0 && setFenIdx(fenIdx - 1)}
+      <div className="d-flex align-items-center justify-content-center">
+        <Button
+          className="me-2 mb-2"
+          onClick={() => fenIdx > 0 && setFenIdx(fenIdx - 1)}
+        >
+          Prev Move
+        </Button>
+        <Button
+          className="me-2 mb-2"
+          onClick={() => fenIdx < fenList.length - 1 && setFenIdx(fenIdx + 1)}
+        >
+          Next Move
+        </Button>
+        <div
+          className="ms-2 mb-2"
+          style={{ cursor: "pointer" }}
+          onClick={() => setFenIdx(0)}
+        >
+          <RestartAltIcon style={{ fontSize: 45, color: "grey" }} />
+        </div>
+        <span className="ms-5">{`${fenIdx + 1} / ${fenList.length}`}</span>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        Prev Move
-      </Button>
-      <Button
-        className="me-2 mb-2"
-        onClick={() => fenIdx < fenList.length - 1 && setFenIdx(fenIdx + 1)}
-      >
-        Next Move
-      </Button>
-      <span>{`${fenIdx + 1} / ${fenList.length}`}</span>
-      <Chessboard position={fen} arePiecesDraggable={false} boardWidth={500} />
+        <span>
+          <Chessboard
+            position={fen}
+            arePiecesDraggable={false}
+            boardWidth={500}
+          />
+        </span>
+      </div>
     </>
   );
 
@@ -119,6 +143,7 @@ export const ChessPage = () => {
         ({ accuracies }) => `W: ${accuracies.white} | B: ${accuracies.black}`,
         {
           header: "Accuracies",
+          enableSorting: false,
         },
       ),
       helper.accessor("rules", {
@@ -226,7 +251,9 @@ export const ChessPage = () => {
           />
         )}
         <br />
-        {fenList.length > 0 && renderChessBoard()}
+        <div style={{ alignItems: "center" }} className="text-center">
+          {fenList.length > 0 && renderChessBoard()}
+        </div>
       </Container>
     </>
   );
