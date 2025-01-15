@@ -148,6 +148,9 @@ export const ChessPage = () => {
   const helper = createColumnHelper();
   const columns = useMemo(
     () => [
+      helper.accessor((row) => getRowPlayer(row).result, {
+        header: "Result",
+      }),
       helper.accessor((row) => getRowPlayer(row).rating, {
         header: "Player Rating",
       }),
@@ -165,7 +168,8 @@ export const ChessPage = () => {
         header: "Opponent Rating",
       }),
       helper.accessor(
-        ({ accuracies }) => `W: ${accuracies?.white} | B: ${accuracies?.black}`,
+        ({ accuracies }) =>
+          `W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`,
         {
           header: "Accuracies",
           enableSorting: false,
