@@ -5,6 +5,7 @@ import { Chessboard } from "react-chessboard";
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import Select from "react-select";
+import moment from "moment";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_START = 2007;
@@ -126,6 +127,12 @@ export const ChessPage = () => {
       helper.accessor("time_class", {
         header: "Time Class",
       }),
+      helper.accessor(
+        ({ end_time }) => moment.unix(end_time).format("MM/DD/YYYY hh:mm:ss"),
+        {
+          header: "End Time",
+        },
+      ),
     ],
     [],
   );
@@ -211,6 +218,7 @@ export const ChessPage = () => {
             handleRowClick={(row) => {
               setFenIdx(0);
               setFenList(pgnToFenList(row.original.pgn));
+              window.scrollTo(0, document.body.scrollHeight);
             }}
             striped
             bordered
