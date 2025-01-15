@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button, Container, Table, Form, InputGroup } from "react-bootstrap";
 import {
   createColumnHelper,
@@ -25,7 +25,7 @@ export const GenericTable = ({ data, columns, handleRowClick, rowStyle }) => {
   const { getRowModel, getHeaderGroups } = table;
 
   return (
-    <Table striped bordered>
+    <Table striped bordered hover>
       <thead>
         {getHeaderGroups().map((group) => (
           <tr key={group.id}>
@@ -71,7 +71,7 @@ export const GenericTable = ({ data, columns, handleRowClick, rowStyle }) => {
       </thead>
       <tbody>
         {getRowModel().rows.map((row) => (
-          <tr key={row.id} onClick={handleRowClick} style={rowStyle}>
+          <tr key={row.id} onClick={() => handleRowClick(row)} style={rowStyle}>
             {row.getVisibleCells().map((cell) => (
               <td key={cell.id}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
