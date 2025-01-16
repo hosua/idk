@@ -91,34 +91,30 @@ export const ChessPage = () => {
           </span>
           <h4 className="my-2">{playerInfo.white}</h4>
           <div className="d-flex flex-row align-items-center">
-            <div
-              className="mx-2 mb-2"
-              style={{ cursor: "pointer" }}
-              onClick={() => setFenIdx(0)}
-            >
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip id="tooltip-top">Restart</Tooltip>}
-              >
-                <RestartAltIcon style={{ fontSize: 45, color: "grey" }} />
-              </OverlayTrigger>
-            </div>
-            <Button
-              className="me-2 mb-2"
-              style={{ flexGrow: 1 }}
-              onClick={() => fenIdx > 0 && setFenIdx(fenIdx - 1)}
-            >
-              Prev Move
+            <Button onClick={() => setFenIdx(0)} disabled={fenIdx <= 0}>
+              {"<<"}
             </Button>
             <Button
-              className="ms-2 mb-2"
+              onClick={() => fenIdx > 0 && setFenIdx(fenIdx - 1)}
+              disabled={fenIdx <= 0}
+            >
+              {"<"}
+            </Button>
+            <label className="mx-2">{`${fenIdx + 1} / ${fenList.length}`}</label>
+            <Button
               onClick={() =>
                 fenIdx < fenList.length - 1 && setFenIdx(fenIdx + 1)
               }
+              disabled={fenIdx >= fenList.length - 1}
             >
-              Next Move
+              {">"}
             </Button>
-            <span className="ms-3 mb-2">{`${fenIdx + 1} / ${fenList.length}`}</span>
+            <Button
+              onClick={() => setFenIdx(fenList.length - 1)}
+              disabled={fenIdx >= fenList.length - 1}
+            >
+              {">>"}
+            </Button>
           </div>
         </div>
       )}
