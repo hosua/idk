@@ -147,11 +147,14 @@ export const ChessPage = () => {
 
   const helper = createColumnHelper();
   const columns = [
-    helper.accessor((row) => getRowPlayer(row, selectedUser).result, {
-      header: "Result",
-    }),
     helper.accessor((row) => getRowPlayer(row, selectedUser).rating, {
       header: "Player Rating",
+    }),
+    helper.accessor((row) => getRowOpponent(row, selectedUser).rating, {
+      header: "Opponent Rating",
+    }),
+    helper.accessor((row) => getRowPlayer(row, selectedUser).result, {
+      header: "Result",
     }),
     helper.accessor((row) => getRowPlayer(row, selectedUser).color, {
       header: "Color",
@@ -163,15 +166,21 @@ export const ChessPage = () => {
         header: "Opponent",
       },
     ),
-    helper.accessor((row) => getRowOpponent(row, selectedUser).rating, {
-      header: "Opponent Rating",
-    }),
     helper.accessor(
       ({ accuracies }) =>
         `W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`,
       {
         header: "Accuracies",
         enableSorting: false,
+        cell: ({ row }) => {
+          console.log(row);
+          const { accuracies } = row.original;
+          return (
+            <div className="text-center">
+              {`W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`}
+            </div>
+          );
+        },
       },
     ),
     helper.accessor("rules", {
