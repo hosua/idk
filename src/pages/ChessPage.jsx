@@ -8,8 +8,36 @@ import { createColumnHelper } from "@tanstack/react-table";
 import Select from "@components/Select";
 import moment from "moment";
 
+const monthOptions = [
+  { label: "January", value: 1 },
+  { label: "February", value: 2 },
+  { label: "March", value: 3 },
+  { label: "April", value: 4 },
+  { label: "May", value: 5 },
+  { label: "June", value: 6 },
+  { label: "July", value: 7 },
+  { label: "August", value: 8 },
+  { label: "September", value: 9 },
+  { label: "October", value: 10 },
+  { label: "November", value: 11 },
+  { label: "December", value: 12 },
+];
+
+const CURRENT_MONTH = monthOptions.find(
+  (option) => option.value === new Date().getMonth() + 1,
+);
 const CURRENT_YEAR = new Date().getFullYear();
+
 const YEAR_START = 2007;
+
+const yearOptions = Array.from(
+  { length: CURRENT_YEAR - YEAR_START + 1 },
+  (_, idx) => {
+    const year = YEAR_START + idx;
+    return { label: year, value: year };
+  },
+).reverse();
+
 const FEN_START = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 const pgnToFenList = (pgn) => {
@@ -29,7 +57,7 @@ const pgnToFenList = (pgn) => {
 export const ChessPage = () => {
   const [date, setDate] = useState({
     year: { label: CURRENT_YEAR, value: CURRENT_YEAR },
-    month: { label: "January", value: 1 },
+    month: CURRENT_MONTH,
   });
   const [games, setGames] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
@@ -47,33 +75,6 @@ export const ChessPage = () => {
     const { games } = await res.json();
     return games;
   };
-
-  const monthOptions = useMemo(
-    () => [
-      { label: "January", value: 1 },
-      { label: "February", value: 2 },
-      { label: "March", value: 3 },
-      { label: "April", value: 4 },
-      { label: "May", value: 5 },
-      { label: "June", value: 6 },
-      { label: "July", value: 7 },
-      { label: "August", value: 8 },
-      { label: "September", value: 9 },
-      { label: "October", value: 10 },
-      { label: "November", value: 11 },
-      { label: "December", value: 12 },
-    ],
-    [],
-  );
-
-  const yearOptions = useMemo(
-    () =>
-      Array.from({ length: CURRENT_YEAR - YEAR_START + 1 }, (_, idx) => {
-        const year = YEAR_START + idx;
-        return { label: year, value: year };
-      }).reverse(),
-    [],
-  );
 
   const renderChessBoard = () => (
     <>
