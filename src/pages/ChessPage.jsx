@@ -111,28 +111,28 @@ export const ChessPage = () => {
     </>
   );
 
-  const getRowPlayer = ({ black, white }, selectedUser) =>
+  const getRowPlayer = ({ black, white }) =>
     white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
       ? { ...white, color: "white" }
       : { ...black, color: "black" };
 
-  const getRowOpponent = ({ black, white }, selectedUser) =>
+  const getRowOpponent = ({ black, white }) =>
     black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
       ? { ...white, color: "white" }
       : { ...black, color: "black" };
 
   const helper = createColumnHelper();
   const columns = [
-    helper.accessor((row) => getRowPlayer(row, selectedUser).rating, {
+    helper.accessor((row) => getRowPlayer(row).rating, {
       header: "Player Rating",
     }),
-    helper.accessor((row) => getRowOpponent(row, selectedUser).rating, {
+    helper.accessor((row) => getRowOpponent(row).rating, {
       header: "Opponent Rating",
     }),
-    helper.accessor((row) => getRowPlayer(row, selectedUser).result, {
+    helper.accessor((row) => getRowPlayer(row).result, {
       header: "Result",
     }),
-    helper.accessor((row) => getRowPlayer(row, selectedUser).color, {
+    helper.accessor((row) => getRowPlayer(row).color, {
       header: "Color",
     }),
     helper.accessor(
@@ -152,7 +152,9 @@ export const ChessPage = () => {
           const { accuracies } = row.original;
           return (
             <div className="text-center">
-              {`W: ${accuracies?.white.toFixed(2) ?? "---"} | B: ${accuracies?.black.toFixed(2) ?? "---"}`}
+              {getRowPlayer(row.original).color === "white"
+                ? `W: ${accuracies?.white.toFixed(2) ?? "---"} | B: ${accuracies?.black.toFixed(2) ?? "---"}`
+                : `B: ${accuracies?.black.toFixed(2) ?? "---"} | W: ${accuracies?.white.toFixed(2) ?? "---"}`}
             </div>
           );
         },
