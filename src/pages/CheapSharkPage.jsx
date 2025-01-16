@@ -64,16 +64,27 @@ export const CheapSharkPage = () => {
     <Container>
       <h2>Steam Games</h2>
       <InputGroup className="mb-3">
-        <Button variant="secondary" onClick={searchForGame}>
+        <Button variant="primary" onClick={searchForGame}>
           Search
         </Button>
         <Form.Control
           placeholder="Search games..."
+          value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") searchForGame();
           }}
         />
+        <Button
+          className="px-3"
+          variant="danger"
+          onClick={() => {
+            setSearchQuery("");
+            setGames([]);
+          }}
+        >
+          <strong>X</strong>
+        </Button>
       </InputGroup>
       {isLoading && <CenterSpinner />}
       {games.length > 0 && !isLoading && (

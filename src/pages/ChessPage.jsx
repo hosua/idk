@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
+import { Button, Container, Row, Col, Form, InputGroup } from "react-bootstrap";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import CenterSpinner from "@components/CenterSpinner";
@@ -114,6 +114,13 @@ export const ChessPage = () => {
             >
               {">>"}
             </Button>
+            <Button
+              className="ms-2"
+              variant="danger"
+              onClick={() => setFenList([])}
+            >
+              X
+            </Button>
           </div>
         </div>
       )}
@@ -215,61 +222,62 @@ export const ChessPage = () => {
       <Container>
         <h3> Chess.com Lookup </h3>
         <Row>
-          <Col sm={2}>
-            <label>Username</label>
-            <Form.Control
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleFetchGames();
-                }
-              }}
-              value={selectedUser}
-              onChange={(e) => setSelectedUser(e.target.value)}
-            />
-          </Col>
-          <Col sm={3}>
-            <label>Month</label>
-            <Select
-              options={monthOptions}
-              value={date.month}
-              onChange={(option) => {
-                setDate({
-                  ...date,
-                  month: option,
-                });
-              }}
-            />
-          </Col>
-          <Col sm={2}>
-            <label>Year</label>
-            <Select
-              options={yearOptions}
-              value={date.year}
-              onChange={(option) => {
-                setDate({
-                  ...date,
-                  year: option,
-                });
-              }}
-            />
-          </Col>
-          <Col sm={6} />
+          <InputGroup className="mb-3">
+            <Col sm={2}>
+              <label>Username</label>
+              <Form.Control
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleFetchGames();
+                  }
+                }}
+                value={selectedUser}
+                onChange={(e) => setSelectedUser(e.target.value)}
+              />
+            </Col>
+            <Col sm={3}>
+              <label>Month</label>
+              <Select
+                options={monthOptions}
+                value={date.month}
+                onChange={(option) => {
+                  setDate({
+                    ...date,
+                    month: option,
+                  });
+                }}
+              />
+            </Col>
+            <Col sm={2}>
+              <label>Year</label>
+              <Select
+                options={yearOptions}
+                value={date.year}
+                onChange={(option) => {
+                  setDate({
+                    ...date,
+                    year: option,
+                  });
+                }}
+              />
+            </Col>
+            <Col className="d-flex align-items-end">
+              <Button onClick={handleFetchGames}>Search</Button>
+              <Button
+                variant="danger px-3"
+                className="mr-auto"
+                onClick={() => {
+                  setFenList([]);
+                  setGames([]);
+                }}
+              >
+                <strong>X</strong>
+              </Button>
+            </Col>
+            <Col sm={2} />
+          </InputGroup>
         </Row>
-        <br />
-        <Button className="mb-2 me-2" onClick={handleFetchGames}>
-          Fetch
-        </Button>
-        <Button
-          className="mb-2"
-          onClick={() => {
-            setFenList([]);
-            setGames([]);
-          }}
-        >
-          Clear
-        </Button>
-        <br />
         {isLoading && <CenterSpinner />}
         {games.length > 0 && (
           <GenericTable
