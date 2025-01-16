@@ -4,7 +4,7 @@ import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import Select from "react-select";
+import Select from "@components/Select";
 import moment from "moment";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
@@ -26,36 +26,12 @@ const pgnToFenList = (pgn) => {
   return [FEN_START, ...fenList];
 };
 
-const customStyles = {
-  control: (provided) => ({
-    ...provided,
-    color: "white",
-    backgroundColor: "#212121",
-    border: "1px solid #495056",
-    borderRadius: "none",
-  }),
-  menu: (provided) => ({
-    ...provided,
-    backgroundColor: "#212121",
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    backgroundColor: state.isFocused ? "#e9ecef" : "#f8f9fa",
-    color: state.isFocused ? "#495057" : "#212529",
-  }),
-  singleValue: (provided) => ({
-    ...provided,
-    color: "white",
-  }),
-};
-
 export const ChessPage = () => {
   const [date, setDate] = useState({
     year: { label: CURRENT_YEAR, value: CURRENT_YEAR },
     month: { label: "January", value: 1 },
   });
   const [games, setGames] = useState([]);
-  const [gamesIdx, setGamesIdx] = useState(0);
   const [selectedUser, setSelectedUser] = useState("");
 
   const [fenList, setFenList] = useState([]);
@@ -249,7 +225,6 @@ export const ChessPage = () => {
                   month: option,
                 });
               }}
-              styles={customStyles}
             />
           </Col>
           <Col sm={2}>
@@ -263,7 +238,6 @@ export const ChessPage = () => {
                   year: option,
                 });
               }}
-              styles={customStyles}
             />
           </Col>
           <Col sm={6} />
