@@ -15,13 +15,14 @@ const customStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isFocused ? "#e9ecef" : "#f8f9fa",
-    color: state.isFocused ? "#495057" : "#212529",
+    backgroundColor: state.isFocused ? "#212121" : "#2D2D2D",
+    color: "white",
   }),
   singleValue: (provided) => ({
     ...provided,
     color: "white",
   }),
+  backgroundColor: "#212121",
 };
 
 export const Select = (props) => {

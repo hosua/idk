@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
+import CenterSpinner from "@components/CenterSpinner";
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import Select from "@components/Select";
@@ -38,6 +39,8 @@ export const ChessPage = () => {
   const [fenIdx, setFenIdx] = useState(0);
   const [fen, setFen] = useState(FEN_START);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchGames = async () => {
     const url = `https://api.chess.com/pub/player/${selectedUser}/games/${date.year.value}/${date.month.value.toString().padStart(2, 0)}`;
     const res = await fetch(url);
@@ -45,28 +48,32 @@ export const ChessPage = () => {
     return games;
   };
 
-  const monthOptions = [
-    { label: "January", value: 1 },
-    { label: "February", value: 2 },
-    { label: "March", value: 3 },
-    { label: "April", value: 4 },
-    { label: "May", value: 5 },
-    { label: "June", value: 6 },
-    { label: "July", value: 7 },
-    { label: "August", value: 8 },
-    { label: "September", value: 9 },
-    { label: "October", value: 10 },
-    { label: "November", value: 11 },
-    { label: "December", value: 12 },
-  ];
+  const monthOptions = useMemo(
+    () => [
+      { label: "January", value: 1 },
+      { label: "February", value: 2 },
+      { label: "March", value: 3 },
+      { label: "April", value: 4 },
+      { label: "May", value: 5 },
+      { label: "June", value: 6 },
+      { label: "July", value: 7 },
+      { label: "August", value: 8 },
+      { label: "September", value: 9 },
+      { label: "October", value: 10 },
+      { label: "November", value: 11 },
+      { label: "December", value: 12 },
+    ],
+    [],
+  );
 
-  const yearOptions = Array.from(
-    { length: CURRENT_YEAR - YEAR_START + 1 },
-    (_, idx) => {
-      const year = YEAR_START + idx;
-      return { label: year, value: year };
-    },
-  ).reverse();
+  const yearOptions = useMemo(
+    () =>
+      Array.from({ length: CURRENT_YEAR - YEAR_START + 1 }, (_, idx) => {
+        const year = YEAR_START + idx;
+        return { label: year, value: year };
+      }).reverse(),
+    [],
+  );
 
   const renderChessBoard = () => (
     <>
@@ -180,12 +187,15 @@ export const ChessPage = () => {
       setFenList([]);
       setGames([]);
     } else {
-      const games = await fetchGames({
+      setIsLoading(true);
+      const res = await fetchGames({
         username: selectedUser.toLowerCase(),
         yyyy: date.year.value,
         mm: date.month.value.toString().padStart(2, "0"),
       });
-      setGames([...games]);
+      setIsLoading(false);
+      console.log(res);
+      if (res) setGames([...res]);
     }
   };
 
@@ -257,6 +267,7 @@ export const ChessPage = () => {
           Clear
         </Button>
         <br />
+        {isLoading && <CenterSpinner />}
         {games.length > 0 && (
           <GenericTable
             data={games}

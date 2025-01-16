@@ -1,14 +1,9 @@
+import React from "react";
 import { Spinner } from "react-bootstrap";
 
 export const CenterSpinner = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className="d-flex align-items-center justify-content-center mb-2">
       <Spinner />
     </div>
   );
