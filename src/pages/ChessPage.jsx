@@ -1,20 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  Form,
-  Tooltip,
-  OverlayTrigger,
-} from "react-bootstrap";
+import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
 import Select from "@components/Select";
 import moment from "moment";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_START = 2007;
