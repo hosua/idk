@@ -144,16 +144,15 @@ export const ChessPage = () => {
     ),
     helper.accessor(
       ({ accuracies }) =>
-        `W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`,
+        `W: ${accuracies?.white.toFixed(2) ?? "---"} | B: ${accuracies?.black.toFixed(2) ?? "---"}`,
       {
         header: "Accuracies",
         enableSorting: false,
         cell: ({ row }) => {
-          console.log(row);
           const { accuracies } = row.original;
           return (
             <div className="text-center">
-              {`W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`}
+              {`W: ${accuracies?.white.toFixed(2) ?? "---"} | B: ${accuracies?.black.toFixed(2) ?? "---"}`}
             </div>
           );
         },

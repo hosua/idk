@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Button, Container, Table, Form, InputGroup } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Table,
+  Form,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
+import Select from "@components/Select";
 import {
   createColumnHelper,
   flexRender,
@@ -14,6 +22,7 @@ export const GenericTable = ({
   columns,
   handleRowClick,
   rowStyle,
+  paginated = true,
   pageSize = 10,
 
   initialState,
@@ -23,9 +32,14 @@ export const GenericTable = ({
 }) => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
-    pageIndex: 0, //initial page index
-    pageSize, //default page size
+    pageIndex: 0,
+    pageSize,
   });
+
+  const pageOptions = [10, 20, 30, 40, 50].map((num) => ({
+    label: num,
+    value: num,
+  }));
 
   const table = useReactTable({
     data,
@@ -38,8 +52,56 @@ export const GenericTable = ({
     state: {
       sorting,
       pagination,
+      pageSize: { label: pageSize, value: pageSize },
     },
   });
+
+  const renderPaginateButtons = () => {
+    return (
+      <div className="d-flex align-items-center justify-content-center">
+        <Button
+          onClick={() => table.firstPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </Button>
+        <Button
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </Button>
+        <label className="mx-2">{`${pagination.pageIndex + 1} / ${Math.ceil(data.length / table.getState().pagination.pageSize)}`}</label>
+        <Button
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </Button>
+        <Button
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">>"}
+        </Button>
+        <Select
+          value={pageOptions.find(
+            (option) => option.value === table.getState().pagination.pageSize,
+          )}
+          onChange={(selectedOption) => {
+            table.setPageSize(selectedOption.value);
+          }}
+          options={pageOptions}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              {pageSize}
+            </option>
+          ))}
+        </Select>
+      </div>
+    );
+  };
 
   const { getRowModel, getHeaderGroups } = table;
 
@@ -109,43 +171,8 @@ export const GenericTable = ({
             </tr>
           ))}
         </tbody>
-        <Button
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<<"}
-        </Button>
-        <Button
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {"<"}
-        </Button>
-        <Button
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">"}
-        </Button>
-        <Button
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {">>"}
-        </Button>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              {pageSize}
-            </option>
-          ))}
-        </select>{" "}
       </Table>
+      {paginated && renderPaginateButtons()}
     </>
   );
 };
