@@ -135,69 +135,58 @@ export const ChessPage = () => {
     </>
   );
 
-  const getRowPlayer = useMemo(
-    () =>
-      ({ black, white }) =>
-        white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
-          ? { ...white, color: "white" }
-          : { ...black, color: "black" },
-    [selectedUser],
-  );
+  const getRowPlayer = ({ black, white }, selectedUser) =>
+    white.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
+      ? { ...white, color: "white" }
+      : { ...black, color: "black" };
 
-  const getRowOpponent = useMemo(
-    () =>
-      ({ black, white }) =>
-        black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
-          ? { ...white, color: "white" }
-          : { ...black, color: "black" },
-    [selectedUser],
-  );
+  const getRowOpponent = ({ black, white }, selectedUser) =>
+    black.username.toLocaleLowerCase() === selectedUser.toLocaleLowerCase()
+      ? { ...white, color: "white" }
+      : { ...black, color: "black" };
 
   const helper = createColumnHelper();
-  const columns = useMemo(
-    () => [
-      helper.accessor((row) => getRowPlayer(row).result, {
-        header: "Result",
-      }),
-      helper.accessor((row) => getRowPlayer(row).rating, {
-        header: "Player Rating",
-      }),
-      helper.accessor((row) => getRowPlayer(row).color, {
-        header: "Color",
-      }),
-      helper.accessor(
-        (row) =>
-          `${getRowOpponent(row).username} (${getRowOpponent(row).color})`,
-        {
-          header: "Opponent",
-        },
-      ),
-      helper.accessor((row) => getRowOpponent(row).rating, {
-        header: "Opponent Rating",
-      }),
-      helper.accessor(
-        ({ accuracies }) =>
-          `W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`,
-        {
-          header: "Accuracies",
-          enableSorting: false,
-        },
-      ),
-      helper.accessor("rules", {
-        header: "Rules",
-      }),
-      helper.accessor("time_class", {
-        header: "Time Class",
-      }),
-      helper.accessor(
-        ({ end_time }) => moment.unix(end_time).format("MM/DD/YYYY hh:mm:ss"),
-        {
-          header: "End Time",
-        },
-      ),
-    ],
-    [],
-  );
+  const columns = [
+    helper.accessor((row) => getRowPlayer(row, selectedUser).result, {
+      header: "Result",
+    }),
+    helper.accessor((row) => getRowPlayer(row, selectedUser).rating, {
+      header: "Player Rating",
+    }),
+    helper.accessor((row) => getRowPlayer(row, selectedUser).color, {
+      header: "Color",
+    }),
+    helper.accessor(
+      (row) =>
+        `${getRowOpponent(row, selectedUser).username} (${getRowOpponent(row, selectedUser).color})`,
+      {
+        header: "Opponent",
+      },
+    ),
+    helper.accessor((row) => getRowOpponent(row, selectedUser).rating, {
+      header: "Opponent Rating",
+    }),
+    helper.accessor(
+      ({ accuracies }) =>
+        `W: ${accuracies?.white ?? "---"} | B: ${accuracies?.black ?? "---"}`,
+      {
+        header: "Accuracies",
+        enableSorting: false,
+      },
+    ),
+    helper.accessor("rules", {
+      header: "Rules",
+    }),
+    helper.accessor("time_class", {
+      header: "Time Class",
+    }),
+    helper.accessor(
+      ({ end_time }) => moment.unix(end_time).format("MM/DD/YYYY hh:mm:ss"),
+      {
+        header: "End Time",
+      },
+    ),
+  ];
 
   const handleFetchGames = async () => {
     if (selectedUser === "") {
@@ -221,10 +210,6 @@ export const ChessPage = () => {
   useEffect(() => {
     // console.log(`games = ${JSON.stringify(games, null, 2)}`);
   }, [games]);
-
-  useEffect(() => {
-    console.log(`User: ${selectedUser}`);
-  }, [selectedUser]);
 
   return (
     <>
