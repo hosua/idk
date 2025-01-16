@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Button, Container, Row, Col, Form } from "react-bootstrap";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import GenericTable from "@components/GenericTable";
@@ -88,7 +96,12 @@ export const ChessPage = () => {
               style={{ cursor: "pointer" }}
               onClick={() => setFenIdx(0)}
             >
-              <RestartAltIcon style={{ fontSize: 45, color: "grey" }} />
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="tooltip-top">Restart</Tooltip>}
+              >
+                <RestartAltIcon style={{ fontSize: 45, color: "grey" }} />
+              </OverlayTrigger>
             </div>
             <Button
               className="me-2 mb-2"
@@ -125,10 +138,10 @@ export const ChessPage = () => {
   const helper = createColumnHelper();
   const columns = [
     helper.accessor((row) => getRowPlayer(row).rating, {
-      header: "Player Rating",
+      header: "Player ELO",
     }),
     helper.accessor((row) => getRowOpponent(row).rating, {
-      header: "Opponent Rating",
+      header: "Opponent ELO",
     }),
     helper.accessor((row) => getRowPlayer(row).result, {
       header: "Result",
@@ -268,7 +281,7 @@ export const ChessPage = () => {
                 black: row.original.black.username,
                 white: row.original.white.username,
               });
-              window.scrollTo(0, document.body.scrollHeight);
+              // window.scrollTo(0, document.body.scrollHeight);
             }}
             striped
             bordered

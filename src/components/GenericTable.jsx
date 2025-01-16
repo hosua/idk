@@ -108,6 +108,7 @@ export const GenericTable = ({
   return (
     <>
       <Table
+        className="text-center"
         striped={striped}
         bordered={bordered}
         hover={hover}
