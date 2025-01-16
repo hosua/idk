@@ -1,6 +1,6 @@
 import GenericTable from "@components/GenericTable";
 import { createColumnHelper } from "@tanstack/react-table";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 
 const DATA = [
   {
