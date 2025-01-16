@@ -115,8 +115,8 @@ export const ChessPage = () => {
               {">>"}
             </Button>
             <Button
-              className="ms-2"
-              variant="danger"
+              className="px-3"
+              variant="outline-danger"
               onClick={() => setFenList([])}
             >
               X
@@ -265,8 +265,8 @@ export const ChessPage = () => {
             <Col className="d-flex align-items-end">
               <Button onClick={handleFetchGames}>Search</Button>
               <Button
-                variant="danger px-3"
-                className="mr-auto"
+                variant="outline-danger"
+                className="px-3 mr-auto"
                 onClick={() => {
                   setFenList([]);
                   setGames([]);

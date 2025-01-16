@@ -5,9 +5,7 @@ import GenericTable from "@components/GenericTable";
 import CenterSpinner from "@components/CenterSpinner";
 
 export const CheapSharkPage = () => {
-  const [sorting, setSorting] = useState([]);
   const [games, setGames] = useState([]);
-  const [dlc, setDlc] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const searchForGame = async () => {
@@ -18,9 +16,7 @@ export const CheapSharkPage = () => {
     const json = await res.json();
     setIsLoading(false);
     const games = json.filter((item) => item.steamAppID);
-    const dlc = json.filter((item) => !item.steamAppID);
     setGames(games);
-    setDlc(dlc);
   };
 
   const helper = createColumnHelper();
@@ -76,8 +72,8 @@ export const CheapSharkPage = () => {
           }}
         />
         <Button
-          className="px-3"
-          variant="danger"
+          variant="outline-danger"
+          className="px-3 mr-auto"
           onClick={() => {
             setSearchQuery("");
             setGames([]);
