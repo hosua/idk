@@ -1,36 +1,40 @@
-import { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container, Table } from "react-bootstrap";
+import CenterSpinner from "@components/CenterSpinner";
 
 export const RandomFactPage = () => {
   const [factList, setFactList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const fetchFact = async () => {
-    const res = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random");
-    const { text, source } = await res.json();
-    setFactList([{ text, source }, ...factList]);
+    if (!isLoading) {
+      setIsLoading(true);
+      const res = await fetch(
+        "https://uselessfacts.jsph.pl/api/v2/facts/random",
+      );
+      setIsLoading(false);
+      const { text, source } = await res.json();
+      setFactList([{ text, source }, ...factList]);
+    }
   };
 
-  useEffect(() => {
-    fetchFact();
-  }, []);
-
   return (
-    <>
-      <Container className="my-3">
-        <Button className="me-2" onClick={fetchFact}>
-          Generate New Fact
-        </Button>
-        <Button onClick={() => setFactList([])}>Clear Facts</Button>
-        <Table striped bordered className="my-3">
-          <tbody>
-            {factList.map(({ text }, index) => (
-              <tr key={index}>
-                <td key={index}>{text}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Container>
-    </>
+    <Container className="mt-3">
+      <h3>Facts</h3>
+      <Button className="me-2" onClick={fetchFact}>
+        Generate New Fact
+      </Button>
+      <Button onClick={() => setFactList([])}>Clear Facts</Button>
+      {isLoading && <CenterSpinner />}
+      <Table striped bordered className="my-3">
+        <tbody>
+          {factList.map(({ text }, index) => (
+            <tr key={index}>
+              <td key={index}>{text}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

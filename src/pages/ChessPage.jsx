@@ -183,19 +183,21 @@ export const ChessPage = () => {
   ];
 
   const handleFetchGames = async () => {
-    if (selectedUser === "") {
-      setFenList([]);
-      setGames([]);
-    } else {
-      setIsLoading(true);
-      const res = await fetchGames({
-        username: selectedUser.toLowerCase(),
-        yyyy: date.year.value,
-        mm: date.month.value.toString().padStart(2, "0"),
-      });
-      setIsLoading(false);
-      console.log(res);
-      if (res) setGames([...res]);
+    if (!isLoading) {
+      if (selectedUser === "") {
+        setFenList([]);
+        setGames([]);
+      } else {
+        setIsLoading(true);
+        const res = await fetchGames({
+          username: selectedUser.toLowerCase(),
+          yyyy: date.year.value,
+          mm: date.month.value.toString().padStart(2, "0"),
+        });
+        setIsLoading(false);
+        console.log(res);
+        if (res) setGames([...res]);
+      }
     }
   };
 

@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container } from "react-bootstrap";
 import CenterSpinner from "@components/CenterSpinner";
 
 export const RandomDogPage = () => {
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const [dogList, setDogList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchDog = async () => {
-    if (!loading) {
-      setLoading(true);
+    if (!isLoading) {
+      setIsLoading(true);
       try {
         const res = await fetch("https://dog.ceo/api/breeds/image/random");
         const { message } = await res.json();
@@ -17,7 +16,7 @@ export const RandomDogPage = () => {
       } catch (err) {
         console.error("Error fetching dog", err);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
   };
@@ -32,7 +31,7 @@ export const RandomDogPage = () => {
           </Button>
           <Button onClick={() => setDogList([])}>Clear Dogs</Button>
         </div>
-        {loading && (
+        {isLoading && (
           <>
             <CenterSpinner />
             <br />

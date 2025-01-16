@@ -1,24 +1,23 @@
-import { useState, useEffect } from "react";
-import { Button, Container, Row, Col, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Container } from "react-bootstrap";
 import CenterSpinner from "@components/CenterSpinner";
 
 export const RandomCatPage = () => {
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const [catList, setCatList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchCat = async ({ gif }) => {
-    if (!loading) {
-      setLoading(true);
+    if (!isLoading) {
+      setIsLoading(true);
       try {
         const res = await fetch(`https://cataas.com/cat${gif ? "/gif" : ""}`);
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
         setCatList([{ url }, ...catList]);
       } catch (err) {
-        console.error("Failed to fetch cat", error);
+        console.error("Failed to fetch cat", err);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
   };
@@ -36,7 +35,7 @@ export const RandomCatPage = () => {
           </Button>
           <Button onClick={() => setCatList([])}>Clear Cats</Button>
         </div>
-        {loading && (
+        {isLoading && (
           <>
             <CenterSpinner />
             <br />
