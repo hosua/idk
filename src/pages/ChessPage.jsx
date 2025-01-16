@@ -9,19 +9,19 @@ import Select from "@components/Select";
 import moment from "moment";
 
 const monthOptions = [
-  { label: "January", value: 1 },
-  { label: "February", value: 2 },
-  { label: "March", value: 3 },
-  { label: "April", value: 4 },
-  { label: "May", value: 5 },
-  { label: "June", value: 6 },
-  { label: "July", value: 7 },
-  { label: "August", value: 8 },
-  { label: "September", value: 9 },
-  { label: "October", value: 10 },
-  { label: "November", value: 11 },
-  { label: "December", value: 12 },
-];
+  "January",
+  "Febuary",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+].map((month, idx) => ({ label: month, value: idx + 1 }));
 
 const CURRENT_MONTH = monthOptions.find(
   (option) => option.value === new Date().getMonth() + 1,
@@ -290,7 +290,7 @@ export const ChessPage = () => {
           />
         )}
         <br />
-        <div style={{ alignItems: "center" }} className="text-center">
+        <div className="align-items-center text-center">
           {fenList.length > 0 && renderChessBoard()}
         </div>
       </Container>
